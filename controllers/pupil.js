@@ -19,7 +19,8 @@ const create = async (req, res) => {
         let createdAt = new Date()
         const pupil = new Pupil({ name, phone, group, status, createdAt })
         await pupil.save()
-        return res.json(pupil)
+        let newPupil = await Pupil.findOne({_id: pupil._id}).populate('group')
+        return res.send(newPupil)
     } catch (e) {
         console.log(e)
         res.send({message: "Serverda xatolik"})
@@ -32,8 +33,8 @@ const update = async (req, res) => {
         let { name, phone, group, status } = req.body
         let updatedAt = new Date()
         await Pupil.findByIdAndUpdate(_id,{name, phone, group, updatedAt, status })
-
-        res.send({message: "Muvaffaqiyatli o'zgartirildi"})
+        let pupil = await Pupil.findOne({_id}).populate('group')
+        res.send(pupil)
     } catch (e) {
         console.log(e)
         res.send({message: "Serverda xatolik"})
